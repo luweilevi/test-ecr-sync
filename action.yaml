@@ -107,19 +107,18 @@ runs:
           }
       shell: bash
       run: |
-
         repo_part=$(echo ${{ inputs.image }} | sed 's/:.*//g')
         repo_name=${{ inputs.target-repo }}/$repo_part
-
+        echo "$repo_name"
         output=$(aws ecr describe-repositories --region cn-northwest-1 --repository-names ${repo_name} 2>&1)
-
-        if [ $? -ne 0 ]; then
-          if echo ${output} | grep -q RepositoryNotFoundException; then
-            echo "creating repo"
-          else
-            >&2 echo ${output}
-          fi
-        fi
+        echo "$output"
+#        if [ $? -ne 0 ]; then
+#          if echo ${output} | grep -q RepositoryNotFoundException; then
+#            echo "creating repo"
+#          else
+#            >&2 echo ${output}
+#          fi
+#        fi
 
 #        if which regctl ; then
 #          REGCTL="$(which regctl)"
