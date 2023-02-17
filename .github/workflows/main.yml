@@ -1,0 +1,23 @@
+name: main
+on:
+  push:
+    branches: [master]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Run on non-fork branches only
+    if: ${{ !github.event.fork }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: tradeshift/actions-semantic-release@v1
+        id: semantic-release
+        with:
+          check_name: Semantic release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Action tags (major version tag)
+        if: ${{ steps.semantic-release.outputs.new_release_published }}
+        run: |
+          git tag -f v${{ steps.semantic-release.outputs.new_release_major_version }}
+          git push -f origin v${{ steps.semantic-release.outputs.new_release_major_version }}
