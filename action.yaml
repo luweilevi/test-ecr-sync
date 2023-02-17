@@ -110,8 +110,8 @@ runs:
         repo_part=$(echo ${{ inputs.image }} | sed 's/:.*//g')
         repo_name=${{ inputs.target-repo }}/$repo_part
         echo "$repo_name"
-        aws configure set aws_access_key_id ${{ env.AWS_ACCESS_KEY_ID }}
-        aws configure set aws_secret_access_key ${{ env.AWS_SECRET_ACCESS_KEY }}
+        aws configure set aws_access_key_id ${{ inputs.target_user }}
+        aws configure set aws_secret_access_key ${{ inputs.target_password }}
         aws ecr describe-repositories --region cn-northwest-1 --repository-names ${repo_name}
         output=$(aws ecr describe-repositories --region cn-northwest-1 --repository-names ${repo_name} 2>&1)
         echo "$output"
