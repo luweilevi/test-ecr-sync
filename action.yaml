@@ -108,7 +108,7 @@ runs:
       run: |
 
 
-        repo_part=(`echo ${{ inputs.image }} | sed 's/:.*//g'`)
+        repo_part=$(echo ${{ inputs.image }} | sed 's/:.*//g')
         repo_name=${{ inputs.target-repo }}/$repo_part
 
         output=$(aws ecr describe-repositories --region cn-northwest-1 --repository-names ${repo_name} 2>&1)
