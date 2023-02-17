@@ -106,8 +106,8 @@ runs:
           }
       shell: bash
       run: |
-        cat policyfiles/cn-ecr-iam-policy.json
-        
+
+
         repo_part=(`echo ${{ inputs.image }} | sed 's/:.*//g'`)
         repo_name=${{ inputs.target-repo }}/$repo_part
 
@@ -145,6 +145,6 @@ runs:
         fi
         aws ecr get-login-password --region cn-northwest-1 | docker login --username AWS --password-stdin ${{ inputs.target-repo }}
         $REGCTL image copy -v info ${{ inputs.source-repo }}/${{ inputs.image }} ${{ inputs.target-repo }}/${{ inputs.target-image || inputs.image }}
-
+        cat ./policyfiles/cn-ecr-iam-policy.json
 
 
