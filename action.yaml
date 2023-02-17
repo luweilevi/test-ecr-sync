@@ -116,11 +116,11 @@ runs:
         if [ $? -ne 0 ]; then
           if echo ${output} | grep -q RepositoryNotFoundException; then
             echo "creating repo"
-            aws ecr create-repository --region cn-northwest-1 --repository-name ${repo_name}
+#            aws ecr create-repository --region cn-northwest-1 --repository-name ${repo_name}
             echo "setting ecr iam policy"
-            aws ecr set-repository-policy -region cn-northwest-1 --repository-name ${repo_name} --policy-text '${{ toJson(env.ecr_iam_policy) }}'
+#            aws ecr set-repository-policy -region cn-northwest-1 --repository-name ${repo_name} --policy-text '${{ toJson(env.ecr_iam_policy) }}'
             echo "setting ecr lifecycle policy"
-            aws ecr put-lifecycle-policy --region cn-northwest-1 --repository-name ${repo_name} --lifecycle-policy-text '${{ toJson(env.lifecyle_policy) }}'
+#            aws ecr put-lifecycle-policy --region cn-northwest-1 --repository-name ${repo_name} --lifecycle-policy-text '${{ toJson(env.lifecyle_policy) }}'
           else
             >&2 echo ${output}
           fi
