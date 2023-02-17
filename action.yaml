@@ -110,19 +110,18 @@ runs:
         repo_part=$(echo ${{ inputs.image }} | sed 's/:.*//g')
         repo_name=${{ inputs.target-repo }}/$repo_part
         echo "$repo_name"
-        export AWS_ACCESS_KEY_ID=${{ env.AWS_ACCESS_KEY_ID }}
-        export AWS_SECRET_ACCESS_KEY=${{ env.AWS_SECRET_ACCESS_KEY }}
-
+        aws configure set aws_access_key_id ${{ env.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ env.AWS_SECRET_ACCESS_KEY }}
         aws ecr describe-repositories --region cn-northwest-1 --repository-names ${repo_name}
         output=$(aws ecr describe-repositories --region cn-northwest-1 --repository-names ${repo_name} 2>&1)
         echo "$output"
-#        if [ $? -ne 0 ]; then
-#          if echo ${output} | grep -q RepositoryNotFoundException; then
-#            echo "creating repo"
-#          else
-#            >&2 echo ${output}
-#          fi
-#        fi
+        if [ $? -ne 0 ]; then
+          if echo ${output} | grep -q RepositoryNotFoundException; then
+            echo "creating repo"
+          else
+            >&2 echo ${output}
+          fi
+        fi
 
 #        if which regctl ; then
 #          REGCTL="$(which regctl)"
