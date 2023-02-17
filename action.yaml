@@ -23,7 +23,7 @@ runs:
   using: "composite"
   steps:
     - id: docker-sync
-      if: ${{ !contains(inputs.target-repo, "amazonaws.com.cn") }}
+      if: ${{ !contains(inputs.target-repo, 'amazonaws.com.cn') }}
       shell: bash
       run: |
         if which regctl ; then
@@ -48,7 +48,7 @@ runs:
         fi
         $REGCTL image copy -v info ${{ inputs.source-repo }}/${{ inputs.image }} ${{ inputs.target-repo }}/${{ inputs.target-image || inputs.image }}
     - id: sync-ecr
-      if: ${{ contains(inputs.target-repo, "amazonaws.com.cn") }}
+      if: ${{ contains(inputs.target-repo, 'amazonaws.com.cn') }}
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.target_user }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.target_password }}
