@@ -106,8 +106,6 @@ runs:
           }
       shell: bash
       run: |
-
-
         repo_part=$(echo ${{ inputs.image }} | sed 's/:.*//g')
         repo_name=${{ inputs.target-repo }}/$repo_part
 
@@ -127,18 +125,18 @@ runs:
         fi
 
         if which regctl ; then
-            REGCTL="$(which regctl)"
+          REGCTL="$(which regctl)"
         else
-            cat >regctl <<EOF
-            #!/bin/sh
-            opts=""
-            case "\$*" in
-              "registry login"*) opts="-t";;
-            esac
-            docker container run \$opts -i --rm --net host \\
-              -u "\$(id -u):\$(id -g)" -e HOME -v \$HOME:\$HOME \\
-              -v /etc/docker/certs.d:/etc/docker/certs.d:ro \\
-              regclient/regctl:latest "\$@"
+          cat >regctl <<EOF
+          #!/bin/sh
+          opts=""
+          case "\$*" in
+            "registry login"*) opts="-t";;
+          esac
+          docker container run \$opts -i --rm --net host \\
+            -u "\$(id -u):\$(id -g)" -e HOME -v \$HOME:\$HOME \\
+            -v /etc/docker/certs.d:/etc/docker/certs.d:ro \\
+            regclient/regctl:latest "\$@"
         EOF
             chmod 755 regctl
             REGCTL="$(pwd)/regctl"
