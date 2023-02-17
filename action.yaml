@@ -110,7 +110,6 @@ runs:
         repo_part=$(echo ${{ inputs.image }} | sed 's/:.*//g')
         repo_name=${{ inputs.target-repo }}/$repo_part
         echo "$repo_name"
-        aws ecr describe-repositories --region cn-northwest-1 --repository-names ${repo_name}
         output=$(aws ecr describe-repositories --region cn-northwest-1 --repository-names ${repo_name} 2>&1)
         echo "$output"
         if [ $? -ne 0 ]; then
