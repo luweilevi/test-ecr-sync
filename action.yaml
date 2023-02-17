@@ -23,7 +23,7 @@ runs:
   using: "composite"
   steps:
     - id: docker-sync
-      if: ${{ !contains(inputs.target-repo,"amazonaws.com.cn" }}
+      if: ${{ !contains(inputs.target-repo,"amazonaws.com.cn") }}
       shell: bash
       run: |
         if which regctl ; then
