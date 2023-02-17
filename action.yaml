@@ -47,6 +47,7 @@ runs:
           docker login -u ${{ inputs.target_user }} -p ${{ inputs.target_password }} ${{ inputs.target-repo }};
         fi
         $REGCTL image copy -v info ${{ inputs.source-repo }}/${{ inputs.image }} ${{ inputs.target-repo }}/${{ inputs.target-image || inputs.image }}
+
     - id: sync-ecr
       if: ${{ contains(inputs.target-repo, 'amazonaws.com.cn') }}
       env:
@@ -106,6 +107,7 @@ runs:
           }
       shell: bash
       run: |
+
         repo_part=$(echo ${{ inputs.image }} | sed 's/:.*//g')
         repo_name=${{ inputs.target-repo }}/$repo_part
 
@@ -119,25 +121,25 @@ runs:
           fi
         fi
 
-        if which regctl ; then
-          REGCTL="$(which regctl)"
-        else
-          cat >regctl <<EOF
-          #!/bin/sh
-          opts=""
-          case "\$*" in
-            "registry login"*) opts="-t";;
-          esac
-          docker container run \$opts -i --rm --net host \\
-            -u "\$(id -u):\$(id -g)" -e HOME -v \$HOME:\$HOME \\
-            -v /etc/docker/certs.d:/etc/docker/certs.d:ro \\
-            regclient/regctl:latest "\$@"
-        EOF
-            chmod 755 regctl
-            REGCTL="$(pwd)/regctl"
-        fi
-        aws ecr get-login-password --region cn-northwest-1 | docker login --username AWS --password-stdin ${{ inputs.target-repo }}
-        $REGCTL image copy -v info ${{ inputs.source-repo }}/${{ inputs.image }} ${{ inputs.target-repo }}/${{ inputs.target-image || inputs.image }}
-        cat ./policyfiles/cn-ecr-iam-policy.json
+#        if which regctl ; then
+#          REGCTL="$(which regctl)"
+#        else
+#          cat >regctl <<EOF
+#          #!/bin/sh
+#          opts=""
+#          case "\$*" in
+#            "registry login"*) opts="-t";;
+#          esac
+#          docker container run \$opts -i --rm --net host \\
+#            -u "\$(id -u):\$(id -g)" -e HOME -v \$HOME:\$HOME \\
+#            -v /etc/docker/certs.d:/etc/docker/certs.d:ro \\
+#            regclient/regctl:latest "\$@"
+#        EOF
+#            chmod 755 regctl
+#            REGCTL="$(pwd)/regctl"
+#        fi
+#        aws ecr get-login-password --region cn-northwest-1 | docker login --username AWS --password-stdin ${{ inputs.target-repo }}
+#        $REGCTL image copy -v info ${{ inputs.source-repo }}/${{ inputs.image }} ${{ inputs.target-repo }}/${{ inputs.target-image || inputs.image }}
+#        cat ./policyfiles/cn-ecr-iam-policy.json
 
 
