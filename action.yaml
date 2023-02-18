@@ -54,7 +54,7 @@ runs:
         AWS_ACCESS_KEY_ID: ${{ inputs.target_user }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.target_password }}
         AWS_DEFAULT_REGION: cn-northwest-1
-        ecr_iam_policy: >
+        ecr_iam_policy: >-
           '{
             "Version": "2012-10-17",
             "Statement": [
@@ -88,7 +88,7 @@ runs:
               }
             ]
           }'
-        lifecycle_policy: >
+        lifecycle_policy: >-
           '{
             "rules": [
               {
@@ -117,10 +117,10 @@ runs:
           aws ecr create-repository --region cn-northwest-1 --repository-name ${repo_name}
 
           echo "-----setting ecr iam policy-----"
-          aws ecr set-repository-policy --region cn-northwest-1 --repository-name ${repo_name} --policy-text ${{ env.ecr_iam_policy }}
+          aws ecr set-repository-policy --region cn-northwest-1 --repository-name ${repo_name} --policy-text ${{ toJSON(fromJSON(env.ecr_iam_policy)) }}
 
           echo "-----setting ecr lifecycle policy-----"
-          aws ecr put-lifecycle-policy --region cn-northwest-1 --repository-name ${repo_name} --lifecycle-policy-text ${{ env.lifecycle_policy }}
+          aws ecr put-lifecycle-policy --region cn-northwest-1 --repository-name ${repo_name} --lifecycle-policy-text ${{ toJSON(fromJSON(env.lifecycle_policy)) }}
 
         fi
 
