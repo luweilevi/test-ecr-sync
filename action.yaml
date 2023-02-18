@@ -106,8 +106,14 @@ runs:
           }
       shell: bash
       run: |
-        repo_name=$(echo ${{ inputs.image }} | sed 's/:.*//g')
-        echo "$repo_name"
+        if [[ ${{ inputs.image }} =~ "amazonaws.com" ]]; then
+          source_image=${{ inputs.image }}
+          repo_name=$(echo ${{ inputs.image }} | sed -e 's/.*amazonaws.com[^\/]*\///g' -e 's/:.*//g')
+        else
+          repo_name=$(echo ${{ inputs.image }} | sed 's/:.*//g')
+          source_image=${{ inputs.source-repo }}/${{ inputs.image }}
+        fi
+
         aws ecr describe-repositories --region cn-northwest-1 --repository-names $repo_name && true
 
         if [ $? -eq 254 ]; then
@@ -141,7 +147,7 @@ runs:
         fi
         echo "Tradeshiftlevi01" | docker login -u levi.lu@tschina --password-stdin tradeshift-registry.cn-shanghai.cr.aliyuncs.com
         aws ecr get-login-password --region cn-northwest-1 | docker login --username AWS --password-stdin ${{ inputs.target-repo }}
-        $REGCTL image copy -v info ${{ inputs.source-repo }}/${{ inputs.image }} ${{ inputs.target-repo }}/${{ inputs.target-image || inputs.image }}
+        $REGCTL image copy -v info $source_image ${{ inputs.target-repo }}/${{ inputs.target-image || inputs.image }}
         cat ./policyfiles/cn-ecr-iam-policy.json
 
 
