@@ -65,7 +65,8 @@ runs:
                   "AWS": [
                     "arn:aws-cn:iam::121118285438:role/ts_all_sand_administrator_role",
                     "arn:aws-cn:iam::120867251111:role/ts_all_prod_administrator_role",
-                    "arn:aws-cn:iam::120867251111:role/ts_all_prod_ts_eks-node-groups_role"
+                    "arn:aws-cn:iam::120867251111:role/ts_all_prod_ts_eks-node-groups_role",
+                    "arn:aws-cn:iam::121118285438:user/ecr-user"
                   ]
                 },
                 "Action": [
