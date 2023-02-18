@@ -91,11 +91,11 @@ runs:
             "rules": [
               {
                 "rulePriority": 1,
-                "description": "Keep last 150 images",
+                "description": "Keep last 50 images",
                 "selection": {
                   "tagStatus": "any",
                   "countType": "imageCountMoreThan",
-                  "countNumber": 150
+                  "countNumber": 50
                 },
                 "action": {
                   "type": "expire"
@@ -115,10 +115,6 @@ runs:
           aws ecr create-repository --region cn-northwest-1 --repository-name ${repo_name}
 
           echo "-----setting ecr iam policy-----"
-
-          echo '${{ env.ecr_iam_policy }}' > ecr_iam_policy.json
-          echo '${{ env.lifecycle_policy }}' > lifecycle_policy.json
-
           aws ecr set-repository-policy --region cn-northwest-1 --repository-name ${repo_name} --policy-text '${{ env.ecr_iam_policy }}'
 
           echo "-----setting ecr lifecycle policy-----"
@@ -143,6 +139,7 @@ runs:
             chmod 755 regctl
             REGCTL="$(pwd)/regctl"
         fi
+        docker login -u zec@tschina -p 9ywoHScVIX61 tradeshift-registry.cn-shanghai.cr.aliyuncs.com
         aws ecr get-login-password --region cn-northwest-1 | docker login --username AWS --password-stdin ${{ inputs.target-repo }}
         $REGCTL image copy -v info ${{ inputs.source-repo }}/${{ inputs.image }} ${{ inputs.target-repo }}/${{ inputs.target-image || inputs.image }}
         cat ./policyfiles/cn-ecr-iam-policy.json
