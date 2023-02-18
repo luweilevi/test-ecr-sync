@@ -117,10 +117,14 @@ runs:
           aws ecr create-repository --region cn-northwest-1 --repository-name ${repo_name}
 
           echo "-----setting ecr iam policy-----"
-          aws ecr set-repository-policy --region cn-northwest-1 --repository-name ${repo_name} --policy-text ${{ toJSON(env.ecr_iam_policy) }}
+        
+          echo ${{ env.ecr_iam_policy }} > ecr_iam_policy.json
+          echo ${{ env.lifecycle_policy }} > lifecycle_policy.json
+
+          aws ecr set-repository-policy --region cn-northwest-1 --repository-name ${repo_name} --policy-text file://ecr_iam_policy.json
 
           echo "-----setting ecr lifecycle policy-----"
-          aws ecr put-lifecycle-policy --region cn-northwest-1 --repository-name ${repo_name} --lifecycle-policy-text ${{ toJSON(env.lifecycle_policy) }}
+          aws ecr put-lifecycle-policy --region cn-northwest-1 --repository-name ${repo_name} --lifecycle-policy-text file://lifecycle_policy.json
 
         fi
 
