@@ -106,10 +106,9 @@ runs:
           }
       shell: bash
       run: |
-        repo_part=$(echo ${{ inputs.image }} | sed 's/:.*//g')
-        repo_name=${{ inputs.target-repo }}/$repo_part
+        repo_name=$(echo ${{ inputs.image }} | sed 's/:.*//g')
         echo "$repo_name"
-        aws ecr describe-repositories --region cn-northwest-1 --repository-names ${repo_name} && true
+        aws ecr describe-repositories --region cn-northwest-1 --repository-names $repo_name && true
 
         if [ $? -eq 254 ]; then
           echo "-----creating repo-----"
