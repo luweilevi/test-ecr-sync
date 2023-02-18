@@ -111,12 +111,15 @@ runs:
         repo_name=${{ inputs.target-repo }}/$repo_part
         echo "$repo_name"
         aws ecr describe-repositories --region cn-northwest-1 --repository-names ${repo_name} && true
+
         if [ $? -eq 254 ]; then
-          echo "creating repo"
+          echo "-----creating repo-----"
           aws ecr create-repository --region cn-northwest-1 --repository-name ${repo_name}
-          echo "setting ecr iam policy"
-          aws ecr set-repository-policy -region cn-northwest-1 --repository-name ${repo_name} --policy-text ${{ toJson(env.ecr_iam_policy) }}
-          echo "setting ecr lifecycle policy"
+
+          echo "-----setting ecr iam policy-----"
+          aws ecr set-repository-policy --region cn-northwest-1 --repository-name ${repo_name} --policy-text ${{ toJson(env.ecr_iam_policy) }}
+
+          echo "-----setting ecr lifecycle policy-----"
           aws ecr put-lifecycle-policy --region cn-northwest-1 --repository-name ${repo_name} --lifecycle-policy-text ${{ toJson(env.lifecycle_policy) }}
 
         fi
