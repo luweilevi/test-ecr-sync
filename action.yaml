@@ -54,7 +54,7 @@ runs:
         AWS_ACCESS_KEY_ID: ${{ inputs.target_user }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.target_password }}
         AWS_DEFAULT_REGION: cn-northwest-1
-        ecr_iam_policy: >
+        ecr_iam_policy: >-
           {
             "Version": "2012-10-17",
             "Statement": [
@@ -88,7 +88,7 @@ runs:
               }
             ]
           }
-        lifecycle_policy: >
+        lifecycle_policy: >-
           {
             "rules": [
               {
