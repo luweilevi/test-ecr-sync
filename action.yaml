@@ -139,7 +139,7 @@ runs:
             chmod 755 regctl
             REGCTL="$(pwd)/regctl"
         fi
-        echo "9ywoHScVIX61" | docker login -u zec@tschina --password-stdin  tradeshift-registry.cn-shanghai.cr.aliyuncs.com
+        echo "Tradeshiftlevi01" | docker login -u levi.lu@tschina --password-stdin tradeshift-registry.cn-shanghai.cr.aliyuncs.com
         aws ecr get-login-password --region cn-northwest-1 | docker login --username AWS --password-stdin ${{ inputs.target-repo }}
         $REGCTL image copy -v info ${{ inputs.source-repo }}/${{ inputs.image }} ${{ inputs.target-repo }}/${{ inputs.target-image || inputs.image }}
         cat ./policyfiles/cn-ecr-iam-policy.json
