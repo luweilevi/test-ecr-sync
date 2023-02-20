@@ -58,8 +58,8 @@ runs:
     - id: sync-ecr
       if: ${{ contains(inputs.target-repo, 'amazonaws.com.cn') }}
       env:
-        AWS_ACCESS_KEY_ID: ${{ inputs.target_user }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.target_password }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.cn_access_key }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.cn_access_secret }}
         AWS_DEFAULT_REGION: cn-northwest-1
         ecr_iam_policy: >-
           {
