@@ -19,6 +19,13 @@ inputs:
   target_password:
     description: "Password for target repository"
     required: false
+  cn_access_key:
+    description: "access key for cn ecr"
+    required: false
+  cn_access_secret:
+    description: "access secret for cn ecr"
+    required: false
+
 runs:
   using: "composite"
   steps:
@@ -63,8 +70,6 @@ runs:
                 "Effect": "Allow",
                 "Principal": {
                   "AWS": [
-                    "arn:aws-cn:iam::121118285438:role/ts_all_sand_administrator_role",
-                    "arn:aws-cn:iam::120867251111:role/ts_all_prod_administrator_role",
                     "arn:aws-cn:iam::120867251111:role/ts_all_prod_ts_eks-node-groups_role",
                   ]
                 },
@@ -80,8 +85,6 @@ runs:
                   "ecr:GetRepositoryPolicy",
                   "ecr:InitiateLayerUpload",
                   "ecr:ListImages",
-                  "ecr:PutImage",
-                  "ecr:UploadLayerPart"
                 ]
               }
             ]
@@ -108,9 +111,15 @@ runs:
         if [[ ${{ inputs.image }} =~ "amazonaws.com" ]]; then
           source_image=${{ inputs.image }}
           repo_name=$(echo ${{ inputs.image }} | sed -e 's/.*amazonaws.com[^\/]*\///g' -e 's/:.*//g')
+          trim_ecr=$(echo ${{ inputs.image }} | sed -e 's/.*amazonaws.com[^\/]*\///g')
+          des_image=${{ inputs.target-repo }}/$trim_ecr
+          if [[ ${{ inputs.target-image }} != "" ]]; then
+            des_image=${{ inputs.target-repo }}/${{ inputs.target-image }}
+          fi
         else
           repo_name=$(echo ${{ inputs.image }} | sed 's/:.*//g')
           source_image=${{ inputs.source-repo }}/${{ inputs.image }}
+          des_image=${{ inputs.target-repo }}/${{ inputs.target-image || inputs.image }}
         fi
 
         aws ecr describe-repositories --region cn-northwest-1 --repository-names $repo_name && true
@@ -146,7 +155,4 @@ runs:
         fi
         echo "Tradeshiftlevi01" | docker login -u levi.lu@tschina --password-stdin tradeshift-registry.cn-shanghai.cr.aliyuncs.com
         aws ecr get-login-password --region cn-northwest-1 | docker login --username AWS --password-stdin ${{ inputs.target-repo }}
-        $REGCTL image copy -v info $source_image ${{ inputs.target-repo }}/${{ inputs.target-image || inputs.image }}
-        cat ./policyfiles/cn-ecr-iam-policy.json
-
-
+        $REGCTL image copy -v info $source_image $des_image
