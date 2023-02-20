@@ -108,12 +108,12 @@ runs:
           }
       shell: bash
       run: |
-        if [[ ${{ inputs.image }} =~ "amazonaws.com" ]]; then
+        if [[ "${{ inputs.image }}" =~ "amazonaws.com" ]]; then
           source_image=${{ inputs.image }}
           repo_name=$(echo ${{ inputs.image }} | sed -e 's/.*amazonaws.com[^\/]*\///g' -e 's/:.*//g')
           trim_ecr=$(echo ${{ inputs.image }} | sed -e 's/.*amazonaws.com[^\/]*\///g')
           des_image=${{ inputs.target-repo }}/$trim_ecr
-          if [[ ${{ inputs.target-image }} != "" ]]; then
+          if [[ "${{ inputs.target-image }}" != "" ]]; then
             des_image=${{ inputs.target-repo }}/${{ inputs.target-image }}
           fi
         else
