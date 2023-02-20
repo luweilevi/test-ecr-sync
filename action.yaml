@@ -114,7 +114,7 @@ runs:
           trim_ecr=$(echo ${{ inputs.image }} | sed -e 's/.*amazonaws.com[^\/]*\///g')
           des_image=${{ inputs.target-repo }}/$trim_ecr
           if [[ "${{ inputs.target-image }}" != "" ]]; then
-            repo_name=$(echo ${{ inputs.image }} | sed -e 's/:.*//g')
+            repo_name=$(echo ${{ inputs.target-image }} | sed -e 's/:.*//g')
             des_image=${{ inputs.target-repo }}/${{ inputs.target-image }}
           fi
         else
