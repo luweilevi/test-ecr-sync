@@ -84,7 +84,7 @@ runs:
                   "ecr:GetDownloadUrlForLayer",
                   "ecr:GetRepositoryPolicy",
                   "ecr:InitiateLayerUpload",
-                  "ecr:ListImages",
+                  "ecr:ListImages"
                 ]
               }
             ]
