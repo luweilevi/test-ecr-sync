@@ -70,7 +70,7 @@ runs:
                 "Effect": "Allow",
                 "Principal": {
                   "AWS": [
-                    "arn:aws-cn:iam::120867251111:role/ts_all_prod_ts_eks-node-groups_role",
+                    "arn:aws-cn:iam::120867251111:role/ts_all_prod_ts_eks-node-groups_role"
                   ]
                 },
                 "Action": [
@@ -114,12 +114,17 @@ runs:
           trim_ecr=$(echo ${{ inputs.image }} | sed -e 's/.*amazonaws.com[^\/]*\///g')
           des_image=${{ inputs.target-repo }}/$trim_ecr
           if [[ "${{ inputs.target-image }}" != "" ]]; then
+            repo_name=$(echo ${{ inputs.image }} | sed -e 's/:.*//g')
             des_image=${{ inputs.target-repo }}/${{ inputs.target-image }}
           fi
         else
           repo_name=$(echo ${{ inputs.image }} | sed 's/:.*//g')
           source_image=${{ inputs.source-repo }}/${{ inputs.image }}
-          des_image=${{ inputs.target-repo }}/${{ inputs.target-image || inputs.image }}
+          des_image=${{ inputs.target-repo }}/${{ inputs.image }}
+          if [[ "${{ inputs.target-image }}" != "" ]]; then
+            repo_name=$(echo ${{ inputs.target-image }} | sed -e 's/:.*//g')
+            des_image=${{ inputs.target-repo }}/${{ inputs.target-image }}
+          fi
         fi
 
         aws ecr describe-repositories --region cn-northwest-1 --repository-names $repo_name && true
